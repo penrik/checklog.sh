@@ -12,7 +12,7 @@ if [ $NEWSIZE \> $OLDSIZE ];
 then 
 	COUNT=`expr $NEWSIZE - $OLDSIZE`
 else
-	COUNT=0
+	COUNT=$NEWSIZE
 fi;
 
 if tail -c "$COUNT" "$LOGFILE" | grep --quiet "$WORD"; then
