@@ -8,17 +8,22 @@ OLDSIZE=$(cat "bytes.db")
 NEWSIZE=$(stat -c%s "$LOGFILE")
 echo "$NEWSIZE" > bytes.db
 
-if [ $NEWSIZE \> $OLDSIZE ];
-then 
-	COUNT=`expr $NEWSIZE - $OLDSIZE`
+if (("$NEWSIZE" >= "$OLDSIZE"));
+then
+        COUNT=`expr $NEWSIZE - $OLDSIZE`
 else
-	COUNT=$NEWSIZE
+        COUNT=$NEWSIZE
 fi;
 
-if tail -c "$COUNT" "$LOGFILE" | grep --quiet "$WORD"; then
-	echo CRITICAL
-	exit 2
+tail -c "$COUNT" "$LOGFILE" | grep --quiet "$WORD"
+RES=$?
+
+
+
+if [ "$RES" -eq "0" ]; then
+        echo CRITICAL
+        exit 2
 else
-	echo OK
-	exit 0
+        echo OK
+        exit 0
 fi
